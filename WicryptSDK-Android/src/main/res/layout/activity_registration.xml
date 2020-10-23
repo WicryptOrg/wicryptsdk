@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistrationActivity"
+
+    android:orientation="vertical"
+    android:padding="35dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back_arrow_circle"
+            android:background="@android:color/transparent"
+            android:onClick="dismiss"/>
+
+        <include
+            layout="@layout/header_mini"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:orientation="vertical">
+
+        <com.ugarsoft.wicryptsdk_android.WTextField
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="name"
+            app:placeHolder="Mary Ann"
+            android:layout_weight="1"/>
+
+        <com.ugarsoft.wicryptsdk_android.WTextField
+            android:id="@+id/pin1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Create 4 digit pin"
+            app:placeHolder="Enter Pin"
+            android:layout_weight="1"/>
+
+        <com.ugarsoft.wicryptsdk_android.WTextField
+            android:id="@+id/pin2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Confirm Pin"
+            app:placeHolder="Enter pin"
+            android:layout_weight="1"/>
+
+        <com.ugarsoft.wicryptsdk_android.WTextField
+            android:id="@+id/referrer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Enter referral code (optional)"
+            app:placeHolder="Referral code"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
+
+        <include
+            android:id="@+id/registration_button"
+            layout="@layout/w_colored_button" />
+
+        <include
+            layout="@layout/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            app:layout_constraintTop_toBottomOf="@id/registration_button"/>
+
+        <com.ugarsoft.wicryptsdk_android.TCView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

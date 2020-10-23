@@ -1,0 +1,3 @@
+include ':WicryptSDK-Android'
+include ':app'
+rootProject.name = "Wicrypt Android Sdk Example"

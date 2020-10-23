@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="4dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter your 4 digit pin code"
+        android:textSize="8sp"
+        android:textColor="#151515"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:background="@drawable/text_field_background"
+        android:paddingStart="6dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="6dp"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_lock"
+            android:layout_margin="6dp" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="24dp"
+            android:background="#E1E1E1"
+            android:layout_marginHorizontal="2dp"/>
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:hint="Enter Pin"
+            android:textSize="12sp"
+            android:lines="1"
+            android:background="@android:color/transparent"
+            android:paddingHorizontal="2dp"
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginEnd="160dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

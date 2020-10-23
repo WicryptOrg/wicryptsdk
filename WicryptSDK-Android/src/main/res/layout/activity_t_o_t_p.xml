@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TOTPActivity">
+
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back_arrow_circle"
+        android:background="@android:color/transparent"
+        android:onClick="dismiss"
+        android:padding="7dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="12dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/large">
+
+            <TextView
+                android:id="@+id/connection_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/small"
+                android:text="@string/connected_text"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/connection_ssid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingStart="@dimen/small"
+                android:paddingEnd="@dimen/small"
+                android:text="jedimaster.wicryptpro"
+                android:textColor="@color/green"
+                android:textSize="@dimen/text_medium" />
+
+
+            <TextView
+                android:id="@+id/no_connection_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingStart="@dimen/small"
+                android:paddingEnd="@dimen/small"
+                android:text="You are not connected to a network"
+                android:textSize="@dimen/text_x_small"
+                android:visibility="gone" />
+
+<!--            <Button-->
+<!--                android:id="@+id/see_devices_btn"-->
+<!--                style="@style/Widget.AppCompat.Button.Borderless.Colored"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="@dimen/small"-->
+<!--                android:background="@drawable/rounded_bg_yellow"-->
+<!--                android:minWidth="0dp"-->
+<!--                android:minHeight="0dp"-->
+<!--                android:onClick="seeDevices"-->
+<!--                android:padding="@dimen/small"-->
+<!--                android:text="See Available Networks"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="@color/yellow"-->
+<!--                android:textSize="@dimen/text_small" />-->
+        </LinearLayout>
+
+
+        <douglasspgyn.com.github.circularcountdown.CircularCountdown
+            android:id="@+id/countdown"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:countdownBackgroundColor="@color/colorPrimaryDark"
+            app:countdownForegroundColor="@color/yellow"
+            app:countdownTextColor="@color/darkGrey"
+            app:countdownTextSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:onClick="copyEmail"
+            android:orientation="horizontal"
+            android:padding="@dimen/small">
+
+            <TextView
+                android:id="@+id/emailView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dozie@qa.team"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_small" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:contentDescription="@string/copy_button_text"
+                android:padding="@dimen/small"
+                app:srcCompat="@drawable/ic_copy" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="copyCode"
+            android:orientation="horizontal"
+            android:padding="@dimen/small">
+
+            <TextView
+                android:id="@+id/otpView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="005000"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_xx_large" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:contentDescription="@string/copy_button_text"
+                android:padding="@dimen/small"
+                app:srcCompat="@drawable/ic_copy" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/medium"
+            android:text="@string/otp_code_subtitle"
+            android:textColor="@color/darkGrey"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_btn_primary"
+            android:gravity="center"
+            android:onClick="goToLoginPage"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</LinearLayout>
