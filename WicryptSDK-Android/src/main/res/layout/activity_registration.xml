@@ -78,9 +78,13 @@
         android:orientation="vertical"
         android:layout_marginTop="16dp">
 
-        <include
+        <com.ugarsoft.wicryptsdk_android.LoadingButton
             android:id="@+id/registration_button"
-            layout="@layout/w_colored_button" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleX="Register"
+            android:background="@drawable/button_background"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <include
             layout="@layout/footer"

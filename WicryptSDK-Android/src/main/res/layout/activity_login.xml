@@ -49,13 +49,22 @@
             app:placeHolder="example@gmail.com"
             android:layout_marginHorizontal="16dp"/>
 
-        <include
-            layout="@layout/w_colored_button"
+<!--        <include-->
+<!--            layout="@layout/w_colored_button"-->
+<!--            android:id="@+id/login_button"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="50dp"-->
+<!--            android:layout_marginHorizontal="16dp" />-->
+
+        <com.ugarsoft.wicryptsdk_android.LoadingButton
             android:id="@+id/login_button"
+            app:titleX="Login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:layout_marginHorizontal="16dp" />
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/button_background"/>
 
         <include
             layout="@layout/footer"

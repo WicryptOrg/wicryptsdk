@@ -7,16 +7,30 @@
     android:orientation="vertical"
     tools:context=".TOTPActivity">
 
-    <ImageButton
-        android:id="@+id/back_button"
-        android:layout_width="wrap_content"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_back_arrow_circle"
-        android:background="@android:color/transparent"
-        android:onClick="dismiss"
-        android:padding="7dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="12dp"/>
+        android:layout_marginTop="25dp">
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back_arrow_circle"
+            android:background="@android:color/transparent"
+            android:onClick="dismiss"
+            android:padding="7dp"
+            android:layout_marginStart="12dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textColor="#EB5757"
+            android:onClick="LogOut"
+            android:background="@color/transparent"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
