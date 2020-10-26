@@ -1,8 +1,10 @@
 package com.ugarsoft.wicryptsdk_android;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private AuthService authService = new AuthService();
     private WTextField textField;
-    private Button loginButton;
+    private LoadingButton loginButton;
     private boolean userExist = false;
     private String email = "";
     private UserViewModel userViewModel;
@@ -41,13 +43,17 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         loginButton.setText(R.string.next);
         loginButton.setOnClickListener(loginButtonClicked);
-        loginButton.setBackgroundColor(Wicrypt.primaryColor);
+        ViewCompat.setBackgroundTintList(loginButton, ColorStateList.valueOf(Wicrypt.primaryColor));
         textField = findViewById(R.id.text_field);
         ImageButton backButton = findViewById(R.id.back_button);
 
         logoView.setImageDrawable(Wicrypt.logo);
         backButton.setColorFilter(Wicrypt.primaryColor);
         userViewModel = new UserViewModel(this);
+        email = userViewModel.getEmail();
+        if (email != null){
+            textField.setText(email);
+        }
     }
 
     public void dismiss(View view) {
@@ -63,14 +69,14 @@ public class LoginActivity extends AppCompatActivity {
             }else if (userExist){
                 authService.loginUser(email, textField.getText(), businessId, onLoginUserCallback);
             }
-            loginButton.setAlpha(0.65f);
-            loginButton.setEnabled(false);
+            loginButton.startLoading();
         }
     };
 
     private void navigateToRegistration(){
         Intent intent = new Intent(this, RegistrationActivity.class);
         intent.putExtra("email", email);
+        intent.putExtra(Constants.BUSINESS_ID, businessId);
         startActivity(intent);
     }
 
@@ -85,12 +91,10 @@ public class LoginActivity extends AppCompatActivity {
                         LoginActivity.this.userExist = true;
                         LoginActivity.this.email = textField.getText();
                         textField.setText("Enter OTP", "", "OTP");
-                        Toast.makeText(LoginActivity.this, "Send OTP", Toast.LENGTH_LONG).show();
                     }else{
                         navigateToRegistration();
                     }
-                    loginButton.setAlpha(1);
-                    loginButton.setEnabled(true);
+                    loginButton.stopLoading();
                 }
             });
         }
@@ -103,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void run() {
                     LoginActivity.this.userExist = false;
                     Toast.makeText(LoginActivity.this, error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    loginButton.stopLoading();
                 }
             });
         }
@@ -120,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, TOTPActivity.class);
                     intent.putExtra(Constants.BUSINESS_ID, businessId);
                     LoginActivity.this.startActivity(intent);
+                    loginButton.stopLoading();
                 }
             });
         }
@@ -129,7 +135,8 @@ public class LoginActivity extends AppCompatActivity {
             LoginActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    loginButton.stopLoading();
                 }
             });
         }

@@ -61,6 +61,10 @@ public class WTextField extends LinearLayout {
         return editTextView.getText().toString();
     }
 
+    public void setText(String text){
+        this.editTextView.setText(text);
+    }
+
     public void setText(String title, String text, String placeHolder){
         this.titleView.setText(title);
         this.editTextView.setText(text);

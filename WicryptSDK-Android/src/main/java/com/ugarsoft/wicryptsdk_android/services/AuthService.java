@@ -36,19 +36,20 @@ import okhttp3.Response;
 public class AuthService {
 
     private final String baseUrl = "http://216.117.149.42:9010";
-    private OkHttpClient client = new OkHttpClient().newBuilder()
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .readTimeout(120, TimeUnit.SECONDS)
-            .writeTimeout(120, TimeUnit.SECONDS)
-            .build();
 
 
     public void userExist(String email, final onUserExistCallback callback){
+
+        Tuple<OkHttpClient, Request> tuple = createPostClient(null,
+                "GET",
+                String.format(baseUrl + "/api/v2/OTP/SendOtpIfUserExist?emailAddress=%s", email));
+
         Request request = new Request.Builder()
                 .url(String.format(baseUrl + "/api/v2/OTP/SendOtpIfUserExist?emailAddress=%s", email))
                 .method("GET", null)
                 .build();
-        client.newCall(request).enqueue(new Callback() {
+
+        tuple.x.newCall(tuple.y).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 callback.onFailed(new Error(e.getLocalizedMessage()));
@@ -80,7 +81,7 @@ public class AuthService {
         bodyAsMap.put("otp", otp);
         bodyAsMap.put("businessId", businessId);
 
-        Tuple<OkHttpClient, Request> tuple = createPostClient(bodyAsMap, baseUrl + "/api/v2/OTP/EmailOTPValidator");
+        Tuple<OkHttpClient, Request> tuple = createPostClient(bodyAsMap, "POST", baseUrl + "/api/v2/OTP/EmailOTPValidator");
 
         tuple.x.newCall(tuple.y).enqueue(new Callback() {
             @Override
@@ -119,7 +120,7 @@ public class AuthService {
         bodyAsMap.put("macAddress", macAddress);
         bodyAsMap.put("businessId", businessId);
 
-        Tuple<OkHttpClient, Request> tuple = createPostClient(bodyAsMap, baseUrl + "/api/v2/auth/SDKsignup");
+        Tuple<OkHttpClient, Request> tuple = createPostClient(bodyAsMap, "POST", baseUrl + "/api/v2/auth/SDKsignup");
 
         tuple.x.newCall(tuple.y).enqueue(new Callback() {
             @Override
@@ -147,22 +148,30 @@ public class AuthService {
 
     }
 
-    private Tuple<OkHttpClient, Request> createPostClient(HashMap<String, String> bodyAsMap, String url){
-        String v = serialize(bodyAsMap);
+    private Tuple<OkHttpClient, Request> createPostClient(HashMap<String, String> bodyAsMap, String method, String url){
         OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(120, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS)
+                .writeTimeout(120, TimeUnit.SECONDS)
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
 
-        RequestBody body = RequestBody.create(mediaType, serialize(bodyAsMap));
+        RequestBody body = null;
+        if (bodyAsMap != null){
+            body = RequestBody.create(mediaType, serialize(bodyAsMap));
+        }
+
         Request request = new Request.Builder()
                 .url(url)
-                .method("POST", body)
+                .method(method, body)
                 .addHeader("Content-Type", "application/json")
                 .build();
         return new Tuple<>(client, request);
     }
 
     private String serialize(HashMap<String, String> map) {
+        if (map == null) return null;
+
         String s = "{";
         int index = 1;
         for (Map.Entry<String, String> valueSet : map.entrySet()){

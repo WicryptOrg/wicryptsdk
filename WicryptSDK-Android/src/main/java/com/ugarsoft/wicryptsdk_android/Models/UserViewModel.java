@@ -29,7 +29,7 @@ public class UserViewModel {
     }
 
     public String getHashedToken() {
-        hashedToken = sharedPreferences.getString(SHARED_PREFERENCE_ID + ".hashedToken", "null");
+        hashedToken = sharedPreferences.getString(SHARED_PREFERENCE_ID + ".hashedToken", null);
         return hashedToken;
     }
 
@@ -37,6 +37,13 @@ public class UserViewModel {
         this.hashedToken = hashedToken;
         sharedPreferences.edit()
                 .putString(SHARED_PREFERENCE_ID + ".hashedToken", hashedToken)
+                .apply();
+    }
+
+    public void clearData(){
+        sharedPreferences.edit()
+                .remove(SHARED_PREFERENCE_ID + ".email")
+                .remove(SHARED_PREFERENCE_ID + ".hashedToken")
                 .apply();
     }
 }

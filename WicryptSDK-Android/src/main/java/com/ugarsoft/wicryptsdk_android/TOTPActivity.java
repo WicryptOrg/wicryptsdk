@@ -6,6 +6,8 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 
 import com.ugarsoft.wicryptsdk_android.Models.UserViewModel;
 import com.ugarsoft.wicryptsdk_android.utils.DefaultCodeGenerator;
@@ -58,7 +61,7 @@ public class TOTPActivity extends AppCompatActivity {
         backButton.setColorFilter(Wicrypt.primaryColor);
         connectionSSIDView.setTextColor(Wicrypt.colorAccent);
         emailView.setTextColor(Wicrypt.primaryColor);
-        loginButton.setBackgroundColor(Wicrypt.primaryColor);
+        ViewCompat.setBackgroundTintList(loginButton, ColorStateList.valueOf(Wicrypt.primaryColor));
 
         emailView.setText(user.getEmail());
         clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -67,8 +70,8 @@ public class TOTPActivity extends AppCompatActivity {
                 .listener(circularCountdownListener)
                 .start();
         totpView.setText(generateTOTP());
-        circularCountdown.setProgressBackgroundColor(Wicrypt.colorAccent);
-        circularCountdown.setProgressForegroundColor(Wicrypt.primaryColor);
+ //       circularCountdown.setProgressBackgroundColor(Wicrypt.colorAccent);
+//        circularCountdown.setProgressForegroundColor(Wicrypt.primaryColor);
         displayConnectionInfo();
     }
 
@@ -94,19 +97,19 @@ public class TOTPActivity extends AppCompatActivity {
         try {
             return defaultCodeGenerator.generate(user.getHashedToken(), counter);
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             return "Error";
         }
     }
 
     public void copyEmail(View view) {
         copyText("Your Email", "");
-        Toast.makeText(getApplicationContext(), "email copied", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "email copied", Toast.LENGTH_LONG).show();
     }
 
     public void copyCode(View view) {
         copyText("TOTP code", "");
-        Toast.makeText(getApplicationContext(), "TOTP copied", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "TOTP copied", Toast.LENGTH_LONG).show();
     }
 
     private void copyText(String label, String text){
@@ -114,12 +117,12 @@ public class TOTPActivity extends AppCompatActivity {
             ClipData clip = ClipData.newPlainText(label, text);
             clipboard.setPrimaryClip(clip);
 
-            Toast.makeText(getApplicationContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Copied to clipboard", Toast.LENGTH_LONG).show();
         }
     }
 
     public void goToLoginPage(View view) {
-        String url = String.format("%s?", "storage.getRouterLoginUrl()");
+        String url = String.format("%s?", "http://192.168.4.4:5000/spikesplash_auth/?");
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
     }
@@ -165,6 +168,12 @@ public class TOTPActivity extends AppCompatActivity {
 
     public void dismiss(View view) {
         //Wicrypt.dismiss(this);
+        finish();
+        
+    }
+
+    public void LogOut(View view) {
+        user.clearData();
         finish();
     }
 

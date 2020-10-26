@@ -22,7 +22,8 @@ public class Wicrypt {
         Intent intent;
         UserViewModel user = new UserViewModel(activity.getApplicationContext());
         String email = user.getEmail();
-        if (email == null){
+        String hashedToken = user.getHashedToken();
+        if (email == null || hashedToken == null){
             intent = new Intent(activity, LoginActivity.class);
         }else{
             intent = new Intent(activity, TOTPActivity.class);

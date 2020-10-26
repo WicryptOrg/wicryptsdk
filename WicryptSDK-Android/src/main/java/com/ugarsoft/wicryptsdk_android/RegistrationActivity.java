@@ -1,9 +1,11 @@
 package com.ugarsoft.wicryptsdk_android;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -18,7 +20,7 @@ import com.ugarsoft.wicryptsdk_android.services.AuthService;
 import com.ugarsoft.wicryptsdk_android.utils.Constants;
 
 public class RegistrationActivity extends AppCompatActivity {
-    private Button registerButton;
+    private LoadingButton registerButton;
     private WTextField nameTextField, pin1TextField, pin2TextField, referralTextField;
     private String email, macAddress;
     private AuthService authService = new AuthService();
@@ -28,8 +30,6 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-        businessId = getIntent().getStringExtra(Constants.BUSINESS_ID);
 
         ImageView logoView = findViewById(R.id.logo);
         nameTextField = findViewById(R.id.name);
@@ -42,9 +42,10 @@ public class RegistrationActivity extends AppCompatActivity {
         logoView.setImageDrawable(Wicrypt.logo);
         backButton.setColorFilter(Wicrypt.primaryColor);
         registerButton.setOnClickListener(registerUser);
-        registerButton.setBackgroundColor(Wicrypt.primaryColor);
+        ViewCompat.setBackgroundTintList(registerButton, ColorStateList.valueOf(Wicrypt.primaryColor));
         Intent intent = getIntent();
         email = intent.getStringExtra("email");
+        businessId = intent.getStringExtra(Constants.BUSINESS_ID);
 
         WifiManager wifiManager = (WifiManager) getApplicationContext()
                 .getSystemService(Context.WIFI_SERVICE);
@@ -78,8 +79,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
 
             authService.registerUser(name, email, pin1, referral, macAddress, businessId, onRegisterUser);
-            registerButton.setAlpha(0.65f);
-            registerButton.setEnabled(false);
+            registerButton.startLoading();
         }
     };
 
@@ -89,7 +89,10 @@ public class RegistrationActivity extends AppCompatActivity {
             RegistrationActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(RegistrationActivity.this, "Error: " + "Success", Toast.LENGTH_LONG).show();
+                    registerButton.stopLoading();
+                    Intent intent = new Intent(RegistrationActivity.this, TOTPActivity.class);
+                    intent.putExtra(Constants.BUSINESS_ID, businessId);
+                    RegistrationActivity.this.startActivity(intent);
                 }
             });
         }
@@ -100,8 +103,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Toast.makeText(RegistrationActivity.this, "Error: " + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                    registerButton.setAlpha(1);
-                    registerButton.setEnabled(true);
+                    registerButton.stopLoading();
                 }
             });
         }
