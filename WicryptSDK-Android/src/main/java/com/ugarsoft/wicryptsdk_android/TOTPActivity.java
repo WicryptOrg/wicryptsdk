@@ -26,6 +26,7 @@ import com.ugarsoft.wicryptsdk_android.Models.UserViewModel;
 import com.ugarsoft.wicryptsdk_android.utils.DefaultCodeGenerator;
 import com.ugarsoft.wicryptsdk_android.utils.WifiHelper;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import douglasspgyn.com.github.circularcountdown.CircularCountdown;
@@ -39,7 +40,7 @@ public class TOTPActivity extends AppCompatActivity {
     private ClipboardManager clipboard;
     private CircularCountdown circularCountdown;
     private DefaultCodeGenerator defaultCodeGenerator;
-    private final int SECONDS_PER_SESSION = 30;
+    public static final int SECONDS_PER_SESSION = 30;
     private WifiManagerReceiver receiver;
 
     @Override
@@ -97,7 +98,6 @@ public class TOTPActivity extends AppCompatActivity {
         try {
             return defaultCodeGenerator.generate(user.getHashedToken(), counter);
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             return "Error";
         }
     }
@@ -169,7 +169,8 @@ public class TOTPActivity extends AppCompatActivity {
     public void dismiss(View view) {
         //Wicrypt.dismiss(this);
         finish();
-        
+        circularCountdown.stop();
+        circularCountdown.disableLoop();
     }
 
     public void LogOut(View view) {

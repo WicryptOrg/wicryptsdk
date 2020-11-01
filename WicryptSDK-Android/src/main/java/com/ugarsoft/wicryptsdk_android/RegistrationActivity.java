@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.ugarsoft.wicryptsdk_android.Models.User;
 import com.ugarsoft.wicryptsdk_android.services.AuthService;
 import com.ugarsoft.wicryptsdk_android.utils.Constants;
+import com.ugarsoft.wicryptsdk_android.utils.WifiHelper;
 
 public class RegistrationActivity extends AppCompatActivity {
     private LoadingButton registerButton;
@@ -47,12 +48,7 @@ public class RegistrationActivity extends AppCompatActivity {
         email = intent.getStringExtra("email");
         businessId = intent.getStringExtra(Constants.BUSINESS_ID);
 
-        WifiManager wifiManager = (WifiManager) getApplicationContext()
-                .getSystemService(Context.WIFI_SERVICE);
-        if (wifiManager != null){
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            macAddress = wifiInfo.getMacAddress();
-        }
+        macAddress = WifiHelper.getMacAddress(getApplicationContext());
     }
 
     public void dismiss(View view) {
@@ -89,10 +85,12 @@ public class RegistrationActivity extends AppCompatActivity {
             RegistrationActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    endPreciousActivity();
                     registerButton.stopLoading();
                     Intent intent = new Intent(RegistrationActivity.this, TOTPActivity.class);
                     intent.putExtra(Constants.BUSINESS_ID, businessId);
                     RegistrationActivity.this.startActivity(intent);
+                    finish();
                 }
             });
         }
@@ -108,4 +106,9 @@ public class RegistrationActivity extends AppCompatActivity {
             });
         }
     };
+
+    private void endPreciousActivity(){
+        Intent intent = new Intent();
+        setResult(2, intent);
+    }
 }

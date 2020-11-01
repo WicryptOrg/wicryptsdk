@@ -1,5 +1,6 @@
 package com.ugarsoft.wicryptsdk_android;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 
@@ -56,8 +57,20 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0){
+            finish();
+        }
+    }
+
     public void dismiss(View view) {
-        finish();
+        if (userExist){
+
+        }else {
+            finish();
+        }
     }
 
     View.OnClickListener loginButtonClicked = new View.OnClickListener() {
@@ -78,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         intent.putExtra("email", email);
         intent.putExtra(Constants.BUSINESS_ID, businessId);
         startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
     AuthService.onUserExistCallback onUserExistCallback = new AuthService.onUserExistCallback() {
@@ -126,6 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra(Constants.BUSINESS_ID, businessId);
                     LoginActivity.this.startActivity(intent);
                     loginButton.stopLoading();
+                    finish();
                 }
             });
         }

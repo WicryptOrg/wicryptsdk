@@ -6,6 +6,7 @@ import com.ugarsoft.wicryptsdk_android.Models.APIResponse;
 import com.ugarsoft.wicryptsdk_android.Models.Tuple;
 import com.ugarsoft.wicryptsdk_android.Models.User;
 import com.ugarsoft.wicryptsdk_android.Models.UserExist;
+import com.ugarsoft.wicryptsdk_android.Wicrypt;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -165,6 +166,7 @@ public class AuthService {
                 .url(url)
                 .method(method, body)
                 .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", Wicrypt.businessId)
                 .build();
         return new Tuple<>(client, request);
     }
