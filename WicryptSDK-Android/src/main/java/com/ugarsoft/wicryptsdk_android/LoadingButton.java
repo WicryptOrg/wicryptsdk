@@ -76,6 +76,11 @@ public class LoadingButton extends LinearLayout {
 
     }
 
+    public void setText(String text){
+        title = text;
+        textView.setText(title);
+    }
+
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         super.setOnClickListener(l);

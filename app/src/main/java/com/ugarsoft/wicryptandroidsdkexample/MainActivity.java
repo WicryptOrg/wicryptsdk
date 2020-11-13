@@ -6,17 +6,24 @@ import androidx.core.content.ContextCompat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.ugarsoft.wicryptsdk_android.LoadingButton;
+import com.ugarsoft.wicryptsdk_android.Models.LoginModel;
+import com.ugarsoft.wicryptsdk_android.Models.Tuple;
+import com.ugarsoft.wicryptsdk_android.WTextField;
 import com.ugarsoft.wicryptsdk_android.Wicrypt;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
     TextView textView;
-    String businessId = "WC-dd6b19906c1f4aa2a5353f6e7e406d9f";
+    WTextField textField;
+    LoadingButton button;
+    String businessId = "";
+    Wicrypt wicrypt;
+    String email;
+    boolean userIsLoggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +31,107 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textView = findViewById(R.id.text);
+        textField = findViewById(R.id.text_field);
+        button = findViewById(R.id.button);
 
         Wicrypt.businessId = businessId;
         //Check if user exist
-        boolean userExist = Wicrypt.userIsLoggedIn(this);
-        textView.setText(userExist ? "true" : "false");
+        int primaryColor = ContextCompat.getColor(this, R.color.colorPrimary);
+        int colorAccent = ContextCompat.getColor(this, R.color.colorAccent);
+        Drawable logo = ContextCompat.getDrawable(this, R.drawable.example_appwidget_preview);
+        Wicrypt.UIProperties uiProperties = new Wicrypt.UIProperties(primaryColor, colorAccent, logo);
+
+        wicrypt = new Wicrypt(this, businessId, uiProperties);
+        userIsLoggedIn = wicrypt.userIsLoggedIn();
+        textView.setText(userIsLoggedIn ? "Logged In" : "logged out");
+        button.setText(userIsLoggedIn ? "Generate TOTP" : "Continue");
+        textField.setVisibility(userIsLoggedIn ? View.GONE : View.VISIBLE);
 
     }
 
     public void Start(View view) {
-        Wicrypt.primaryColor = ContextCompat.getColor(this, R.color.colorPrimary);
-        Wicrypt.colorAccent = ContextCompat.getColor(this, R.color.colorAccent);
-        Wicrypt.logo = ContextCompat.getDrawable(this, R.drawable.example_appwidget_preview);
-        Wicrypt.start(this, "WC-dd6b19906c1f4aa2a5353f6e7e406d9f");
+        if (userIsLoggedIn){
+            String totp = wicrypt.generateCode();
+
+            if (totp != null){
+                textView.setText(totp);
+            }else {
+                textView.setText("error");
+            }
+
+            return;
+        }
+
+        if (email == null){
+            //wicrypt.start(this);
+            wicrypt.checkUserExistAndSendTOTP(textField.getText(), checkUserAndSendTOTP);
+            button.startLoading();
+        }else{
+            LoginModel  loginModel = new LoginModel(email, textField.getText());
+            wicrypt.loginUser(loginModel, loginCallback);
+            button.startLoading();
+        }
+    }
+
+    Wicrypt.Callback checkUserAndSendTOTP = new Wicrypt.Callback() {
+        @Override
+        public void onSuccess() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    email = textField.getText();
+                    textField.setText("OTP", "", "Enter OTP");
+                    button.stopLoading();
+                }
+            });
+        }
+
+        @Override
+        public void onFail(final Error error) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText("User Check Error: " + error.getLocalizedMessage());
+                    button.stopLoading();
+                }
+            });
+        }
+    };
+
+    Wicrypt.Callback loginCallback = new Wicrypt.Callback() {
+        @Override
+        public void onSuccess() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText("Logged in");
+                    textField.setVisibility(View.GONE);
+                    button.stopLoading();
+                }
+            });
+        }
+
+        @Override
+        public void onFail(final Error error) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText("Login Error: " + error.getLocalizedMessage());
+                    button.stopLoading();
+                }
+            });
+        }
+    };
+
+    public void LogOut(View view) {
+        wicrypt.logOut();
+        userIsLoggedIn = false;
+        textView.setText("LogOut");
+        button.setText("Continue");
+        textField.setVisibility(View.VISIBLE);
+    }
+
+    public void ShowUI(View view) {
+        wicrypt.start();
     }
 }

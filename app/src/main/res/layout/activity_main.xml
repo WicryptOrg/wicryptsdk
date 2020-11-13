@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="32dp">
 
     <TextView
         android:id="@+id/text"
@@ -15,11 +16,38 @@
         android:text="Loading. . ."
         android:layout_marginBottom="16dp"/>
 
+    <com.ugarsoft.wicryptsdk_android.WTextField
+        android:id="@+id/text_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Email"
+        app:placeHolder="Enter Emil"/>
+
+    <com.ugarsoft.wicryptsdk_android.LoadingButton
+        android:id="@+id/button"
+        app:titleX="Continue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:onClick="Start"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/button_background"/>
+
+    <Button
+        android:id="@+id/log_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="log out"
+        android:paddingHorizontal="60dp"
+        android:onClick="LogOut"
+        android:layout_marginTop="15dp"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="start"
+        android:text="Use UI"
         android:paddingHorizontal="60dp"
-        android:onClick="Start"/>
+        android:onClick="ShowUI"
+        android:layout_marginTop="15dp"/>
 
 </LinearLayout>

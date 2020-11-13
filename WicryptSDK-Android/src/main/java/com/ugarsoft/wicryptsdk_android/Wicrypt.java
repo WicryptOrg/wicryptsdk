@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Debug;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ugarsoft.wicryptsdk_android.Models.LoginModel;
+import com.ugarsoft.wicryptsdk_android.Models.SignUpModel;
 import com.ugarsoft.wicryptsdk_android.Models.Tuple;
 import com.ugarsoft.wicryptsdk_android.Models.User;
 import com.ugarsoft.wicryptsdk_android.Models.UserExist;
@@ -20,17 +23,32 @@ import com.ugarsoft.wicryptsdk_android.utils.WifiHelper;
 import java.util.Date;
 
 public class Wicrypt {
-    protected static Class<?> cls;
 
-    public static int primaryColor;
+    static int primaryColor;
     public static int colorAccent;
     public static Drawable logo;
-    public static String businessId;
 
-    public static void start(Activity activity, String businessId){
-        Wicrypt.businessId = businessId;
+    public static String businessId;
+    private  UserViewModel user;
+
+    private DefaultCodeGenerator codeGenerator;
+    private Activity activity;
+    private Context context;
+
+    public Wicrypt(Activity activity,
+                   String businessId,
+                   UIProperties uiProperties){
+        this.activity = activity;
+        user = new UserViewModel(activity.getApplicationContext());
+        primaryColor = uiProperties.primaryColor;
+        colorAccent = uiProperties.colorAccent;
+        logo = uiProperties.logo;
+        this.businessId = businessId;
+        codeGenerator = new DefaultCodeGenerator();
+    }
+
+    public void start(){
         Intent intent;
-        UserViewModel user = new UserViewModel(activity.getApplicationContext());
         String email = user.getEmail();
         String hashedToken = user.getHashedToken();
         if (email == null || hashedToken == null){
@@ -43,9 +61,8 @@ public class Wicrypt {
     }
 
     //check if user is logged in
-    private static UserViewModel user;
-    public static boolean userIsLoggedIn(Activity activity){
-        user = new UserViewModel(activity.getApplicationContext());
+    public boolean userIsLoggedIn(){
+        //user = new UserViewModel(activity.getApplicationContext());
         String email = user.getEmail();
         String hashedToken = user.getHashedToken();
         if (email == null || hashedToken == null){
@@ -56,7 +73,7 @@ public class Wicrypt {
     }
 
     //check if user owns an account
-    public static void checkUserExistAndSentOTP(String email, final Callback callback){
+    public void checkUserExistAndSendTOTP(String email, final Callback callback){
         AuthService authService = new AuthService();
         authService.userExist(email, new AuthService.onUserExistCallback() {
             @Override
@@ -72,14 +89,14 @@ public class Wicrypt {
     }
 
     //login user
-    public static void loginUser(final String email, String otp, String businessId,
+    public void loginUser(final LoginModel loginModel,
                                  final Callback callback){
         AuthService authService = new AuthService();
-        authService.loginUser(email, otp, businessId, new AuthService.onLoginUserCallback() {
+        authService.loginUser(loginModel.getEmail(), loginModel.getOtp(), businessId, new AuthService.onLoginUserCallback() {
             @Override
             public void onSuccess(User user) {
-                Wicrypt.user.setEmail(email);
-                Wicrypt.user.setHashedToken(user.getHashedToken());
+                Wicrypt.this.user.setEmail(loginModel.getEmail());
+                Wicrypt.this.user.setHashedToken(user.getHashedToken());
                 callback.onSuccess();
             }
 
@@ -91,18 +108,21 @@ public class Wicrypt {
     }
 
     //create new user
-    public static void createNewUser(Context context, String name, final String email, String referrer,
-                                     String password, String businessId,
+    public void createNewUser(Context context, final SignUpModel signUpModel,
                                      final Callback callback){
 
         AuthService authService = new AuthService();
 
-        authService.registerUser(name, email, referrer, password, WifiHelper.getMacAddress(context),
+        authService.registerUser(signUpModel.getName(),
+                signUpModel.getEmail(),
+                signUpModel.getReferrer(),
+                signUpModel.getPassword(),
+                WifiHelper.getMacAddress(context),
                 businessId, new AuthService.onRegisterUserCallback() {
             @Override
             public void onSuccess(User user) {
-                Wicrypt.user.setEmail(email);
-                Wicrypt.user.setHashedToken(user.getHashedToken());
+                Wicrypt.this.user.setEmail(signUpModel.getEmail());
+                Wicrypt.this.user.setHashedToken(user.getHashedToken());
                 callback.onSuccess();
             }
 
@@ -114,31 +134,42 @@ public class Wicrypt {
 
     }
 
-    private static DefaultCodeGenerator codeGenerator;
     //generate TOTP
     //check if user exist else return error
     //if user exist log user in
-    public static Tuple<Boolean, String> generateCode(Activity activity){
-        if (!userIsLoggedIn(activity)){
-            return new Tuple<>(false, "User is not logged in");
+    public String generateCode(){
+        if (!userIsLoggedIn()){
+            throw new RuntimeException("User is not logged in");
         }else {
-            if (codeGenerator == null){
-                codeGenerator = new DefaultCodeGenerator();
-            }
             long counter = new Date().getTime() / 1000 / TOTPActivity.SECONDS_PER_SESSION;
             try {
                 String code = codeGenerator.generate(user.getHashedToken(), counter);
-                return new Tuple<>(true, code);
+                return code;
             }catch (Exception ex){
-                return new Tuple<>(false, ex.getLocalizedMessage());
+                return null;
             }
-
         }
+    }
+
+    public void logOut(){
+        user.clearData();
     }
 
     public interface Callback{
         public void onSuccess();
         public void onFail(Error error);
+    }
+
+    public static class UIProperties{
+        private int primaryColor;
+        private int colorAccent;
+        private Drawable logo;
+
+        public UIProperties(int primaryColor, int colorAccent, Drawable logo) {
+            this.primaryColor = primaryColor;
+            this.colorAccent = colorAccent;
+            this.logo = logo;
+        }
     }
 
 }
