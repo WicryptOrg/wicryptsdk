@@ -81,6 +81,16 @@ public class LoadingButton extends LinearLayout {
         textView.setText(title);
     }
 
+    public void disable(){
+        setEnabled(false);
+        setAlpha(0.65f);
+    }
+
+    public void enable(){
+        setEnabled(true);
+        setAlpha(1f);
+    }
+
     @Override
     public void setOnClickListener(@Nullable OnClickListener l) {
         super.setOnClickListener(l);

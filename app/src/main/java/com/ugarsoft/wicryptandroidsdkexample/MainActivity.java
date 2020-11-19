@@ -3,6 +3,7 @@ package com.ugarsoft.wicryptandroidsdkexample;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     WTextField textField;
     LoadingButton button;
-    String businessId = "";
+    static String businessId = "";
     Wicrypt wicrypt;
     String email;
     boolean userIsLoggedIn;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Drawable logo = ContextCompat.getDrawable(this, R.drawable.example_appwidget_preview);
         Wicrypt.UIProperties uiProperties = new Wicrypt.UIProperties(primaryColor, colorAccent, logo);
 
-        wicrypt = new Wicrypt(this, businessId, uiProperties);
+        wicrypt = new Wicrypt(this, MainActivity.businessId, uiProperties);
         userIsLoggedIn = wicrypt.userIsLoggedIn();
         textView.setText(userIsLoggedIn ? "Logged In" : "logged out");
         button.setText(userIsLoggedIn ? "Generate TOTP" : "Continue");
@@ -133,5 +134,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void ShowUI(View view) {
         wicrypt.start();
+    }
+
+    public void ToRegistration(View view) {
+        Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivity(intent);
     }
 }

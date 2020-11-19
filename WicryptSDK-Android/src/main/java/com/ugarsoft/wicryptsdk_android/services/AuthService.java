@@ -1,6 +1,7 @@
 package com.ugarsoft.wicryptsdk_android.services;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.ugarsoft.wicryptsdk_android.Models.APIResponse;
 import com.ugarsoft.wicryptsdk_android.Models.Tuple;
@@ -36,6 +37,14 @@ import okhttp3.Response;
 
 public class AuthService {
 
+    Gson gson;
+
+    public AuthService(){
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeNulls();
+        gson = gsonBuilder.create();
+    }
+
     private final String baseUrl = "http://216.117.149.42:9010";
 
 
@@ -66,7 +75,11 @@ public class AuthService {
                     Gson gson = new Gson();
                     Type type = new TypeToken<APIResponse<UserExist>>(){}.getType();
                     APIResponse<UserExist> r = gson.fromJson(data, type);
-                    callback.onSuccess(r.getData());
+                    if (r.getSuccess()){
+                        callback.onSuccess(r.getData());
+                    }else{
+                        callback.onFailed( new Error(r.getMessage()) );
+                    }
 
                 }catch (Exception ex){
                     callback.onFailed(new Error(ex.getLocalizedMessage()));
@@ -100,7 +113,11 @@ public class AuthService {
                     Gson gson = new Gson();
                     Type type = new TypeToken<APIResponse<User>>(){}.getType();
                     APIResponse<User> r = gson.fromJson(data, type);
-                    callback.onSuccess(r.getData());
+                    if (r.getSuccess()){
+                        callback.onSuccess(r.getData());
+                    }else{
+                        callback.onFailed( new Error(r.getMessage()) );
+                    }
 
                 }catch (Exception ex){
                     callback.onFailed(new Error(ex.getLocalizedMessage()));
@@ -135,12 +152,13 @@ public class AuthService {
                     String result = response.body().string();
                     JSONObject object = new JSONObject(result);
                     String data = object.toString();
-
-                    Gson gson = new Gson();
                     Type type = new TypeToken<APIResponse<User>>(){}.getType();
                     APIResponse<User> r = gson.fromJson(data, type);
-                    callback.onSuccess(r.getData());
-
+                    if (r.getSuccess()){
+                        callback.onSuccess(r.getData());
+                    }else{
+                        callback.onFailed( new Error(r.getMessage()) );
+                    }
                 }catch (Exception ex){
                     callback.onFailed(new Error(ex.getLocalizedMessage()));
                 }
@@ -151,9 +169,9 @@ public class AuthService {
 
     private Tuple<OkHttpClient, Request> createPostClient(HashMap<String, String> bodyAsMap, String method, String url){
         OkHttpClient client = new OkHttpClient().newBuilder()
-                .connectTimeout(120, TimeUnit.SECONDS)
-                .readTimeout(120, TimeUnit.SECONDS)
-                .writeTimeout(120, TimeUnit.SECONDS)
+                .connectTimeout(180, TimeUnit.SECONDS)
+                .readTimeout(180, TimeUnit.SECONDS)
+                .writeTimeout(180, TimeUnit.SECONDS)
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
 

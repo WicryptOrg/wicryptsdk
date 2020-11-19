@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistrationActivity"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.ugarsoft.wicryptsdk_android.WTextField
+        android:id="@+id/email_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Email"
+        app:placeHolder="example@gmailcom"/>
+
+    <com.ugarsoft.wicryptsdk_android.WTextField
+        android:id="@+id/full_name_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Full Name"
+        app:placeHolder="John Doe"/>
+
+    <com.ugarsoft.wicryptsdk_android.WTextField
+        android:id="@+id/pin_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="$ digit pin"
+        app:placeHolder="****"/>
+
+    <com.ugarsoft.wicryptsdk_android.WTextField
+        android:id="@+id/referral_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Referral Code"
+        app:placeHolder="Enter Code"/>
+
+    <com.ugarsoft.wicryptsdk_android.LoadingButton
+        android:id="@+id/button"
+        app:titleX="Register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:onClick="Register"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/button_background"/>
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registration Complete"
+        android:textSize="11sp"
+        android:textColor="@android:color/holo_red_light"
+        android:layout_margin="16dp"
+        android:gravity="center_horizontal"/>
+
+</LinearLayout>

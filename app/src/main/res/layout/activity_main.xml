@@ -50,4 +50,12 @@
         android:onClick="ShowUI"
         android:layout_marginTop="15dp"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register User"
+        android:paddingHorizontal="60dp"
+        android:onClick="ToRegistration"
+        android:layout_marginTop="15dp"/>
+
 </LinearLayout>

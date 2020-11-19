@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Wicrypt Android Sdk Example</string>
+    <string name="registration_complete">Registration Complete</string>
 </resources>

@@ -39,12 +39,20 @@ public class Wicrypt {
                    String businessId,
                    UIProperties uiProperties){
         this.activity = activity;
+        context = activity.getApplicationContext();
         user = new UserViewModel(activity.getApplicationContext());
         primaryColor = uiProperties.primaryColor;
         colorAccent = uiProperties.colorAccent;
         logo = uiProperties.logo;
-        this.businessId = businessId;
+        Wicrypt.businessId = businessId;
         codeGenerator = new DefaultCodeGenerator();
+    }
+
+    public Wicrypt(Activity activity, String businessId){
+        this.activity = activity;
+        context = activity.getApplicationContext();
+        user = new UserViewModel(activity.getApplicationContext());
+        Wicrypt.businessId = businessId;
     }
 
     public void start(){
@@ -108,7 +116,7 @@ public class Wicrypt {
     }
 
     //create new user
-    public void createNewUser(Context context, final SignUpModel signUpModel,
+    public void createNewUser(final SignUpModel signUpModel,
                                      final Callback callback){
 
         AuthService authService = new AuthService();
